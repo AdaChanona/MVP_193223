@@ -1,5 +1,7 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:mvp_all/splash/splash_canvas.dart';
+import 'dart:ui' as ui;
 
 // Importaciones clase Vistas
 import '../pages/on_boarding.dart';
@@ -12,10 +14,12 @@ class SplashView extends StatefulWidget {
 }
 
 class _SplashViewState extends State<SplashView> {
+  ui.Image? image;
   @override
   void initState() {
     super.initState();
     _toOnbording();
+    _image("assets/image/splash.png");
   }
 
   @override
@@ -24,7 +28,7 @@ class _SplashViewState extends State<SplashView> {
       body: Center(
         child: SizedBox(
           child: CustomPaint(
-            painter: _SplashCanvas(),
+            painter: SplashCanvas(image),
           ),
           height: double.infinity,
           width: double.infinity,
@@ -38,37 +42,19 @@ class _SplashViewState extends State<SplashView> {
     Navigator.pushReplacement(
       context,
       MaterialPageRoute(
-        builder: (context) => OnBoarding(),
+        builder: (context) => const OnBoarding(),
       ),
     );
   }
-}
 
-class _SplashCanvas extends CustomPainter {
-  @override
-  void paint(Canvas canvas, Size size) {
-    final paint = Paint();
-
-    paint.color = Colors.amber;
-
-    paint.style = PaintingStyle.stroke;
-
-    paint.strokeWidth = 5;
-
-    final path = Path();
-
-    path.lineTo(0, size.height * 0.20);
-    path.quadraticBezierTo(
-        size.width * 0.50, size.height * 0.28, size.width, size.height * 0.20);
-
-    // path.quadraticBezierTo(x1, y1, x2, y2)
-    path.lineTo(size.width, 0);
-
-    canvas.drawPath(path, paint);
-  }
-
-  @override
-  bool shouldRepaint(covariant CustomPainter oldDelegate) {
-    return true;
+  _image(String path) async{
+    final data= await rootBundle.load(path);
+    final bytes = data.buffer.asUint8List();
+    final image = await decodeImageFromList(bytes);
+    setState(() {
+      this.image=image;
+    });
   }
 }
+
+
