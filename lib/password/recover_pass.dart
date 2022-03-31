@@ -86,7 +86,7 @@ class _RecoverPassState extends State<RecoverPass> {
                       ),
                       filled: true,
                       hintStyle:
-                          TextStyle(color: Color.fromARGB(255, 161, 161, 161)),
+                          const TextStyle(color: Color.fromARGB(255, 161, 161, 161)),
                       hintText: "Direccion de correo",
                       fillColor: Colors.white70,
                     ),

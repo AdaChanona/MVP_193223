@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import '';
+import 'package:flutter/gestures.dart';
+import 'package:mvp_all/styles/colors/colors_views.dart';
 
 class Login extends StatelessWidget {
   const Login({Key? key}) : super(key: key);
@@ -134,26 +135,25 @@ class Login extends StatelessWidget {
       ],
     );
 
-    final cuentaSesion = Container(
-      width: 400,
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: <Widget>[
-          const Text(
-            '¿Ya tienes una cuenta?',
-            style: TextStyle(fontSize: 13, color: Colors.black,),
-          ),
-          TextButton(
-            onPressed: () {
-              Navigator.pushNamed(context, '/login_panel');
-            },
-            child: const Text(
-              'Iniciar sesion',
-              style: TextStyle(
-                color: Colors.pinkAccent,
-                fontSize: 13,
-              ),
+    final cuentaSesion = RichText(
+      textAlign: TextAlign.start,
+      text: TextSpan(
+        children: <InlineSpan>[
+          const TextSpan(
+            text: '¿Ya tienes una cuenta? ',
+            style: TextStyle(
+              color: ColorsViews.textSubtitle,
+              fontSize: 13,
             ),
+          ),
+          TextSpan(
+            text: ' Iniciar sesión.',
+            style: const TextStyle(
+              color: ColorsViews.colorBarra, fontSize: 13, fontWeight: FontWeight.bold,),
+            recognizer: TapGestureRecognizer()
+              ..onTap = () {
+                Navigator.pushNamed(context, '/login_panel');
+              },
           ),
         ],
       ),

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:mvp_all/styles/colors/colors_views.dart';
-import 'login.dart';
 
 int page =0;
 
@@ -128,8 +127,8 @@ class _OnBoardingState extends State<OnBoarding> {
                 ? 'Continuar'
                 : 'Siguiente',
             style: page == (boardingData.length - 1)
-                ? TextStyle(color: Colors.white)
-                : TextStyle(color: ColorsViews.textSubtitle)),
+                ? const TextStyle(color: Colors.white)
+                : const TextStyle(color: ColorsViews.textSubtitle)),
         style: ButtonStyle(
           backgroundColor: MaterialStateProperty.resolveWith<Color>((states) {
             if (page == (boardingData.length - 1)) {
