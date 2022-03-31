@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '';
 
 class Login extends StatelessWidget {
   const Login({Key? key}) : super(key: key);
@@ -78,7 +79,9 @@ class Login extends StatelessWidget {
               borderRadius: BorderRadius.circular(30),
             ),
           ),
-          onPressed: () {},
+          onPressed: () {
+            Navigator.pushNamed(context, '/register');
+          },
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: const <Widget>[
@@ -141,7 +144,9 @@ class Login extends StatelessWidget {
             style: TextStyle(fontSize: 13, color: Colors.black,),
           ),
           TextButton(
-            onPressed: () {},
+            onPressed: () {
+              Navigator.pushNamed(context, '/login_panel');
+            },
             child: const Text(
               'Iniciar sesion',
               style: TextStyle(

@@ -40,6 +40,8 @@ class _OnBoardingState extends State<OnBoarding> {
     }
 
   ];
+  int page =0;
+  final PageController _pageController = PageController(initialPage: 0);
 
   @override
   Widget build(BuildContext context) {
@@ -53,8 +55,9 @@ class _OnBoardingState extends State<OnBoarding> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Expanded(
-                    flex: 3,
+                    flex: 2,
                     child: PageView.builder(
+                      controller :_pageController,
                       onPageChanged: (value) =>{
                         setState((){
                           page=value;
@@ -81,22 +84,10 @@ class _OnBoardingState extends State<OnBoarding> {
                                     (index) => _animatedContainer(index:index)
                             ),
                           ),
-                          if (page==4) ...[
-                            _botonCambio(
-                              ColorsViews.bottomGreen,
-                              ColorsViews.bottomGreen,
-                              Colors.white, "Continuar",
-                              1
-                            ),
-                          ] else ...[
-                            _botonCambio(
-                                Colors.white,
-                                ColorsViews.colorBarraContinua,
-                                ColorsViews.colorBarraContinua,
-                                "Siguiente",
-                                0
-                            ),
-                          ],
+                          Padding(
+                            padding: const EdgeInsets.only(top: 80, bottom:20),
+                            child: _botonCambio(),
+                          ),
                         ],
                       ),
                     ),
@@ -108,37 +99,62 @@ class _OnBoardingState extends State<OnBoarding> {
         ),
     );
   }
-  Container _botonCambio (botonColor, borderColor, textColor, text, pageRoute){
-    return Container(
+  SizedBox _botonCambio() {
+    return SizedBox(
+      width: 270,
       height: 40,
-      width: 300,
-      margin: const EdgeInsets.only(top: 60, left: 20, right: 20),
-      child: ElevatedButton(
-        style: ElevatedButton.styleFrom(
-          primary: botonColor,
-          shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(30)
-          ),
-          side: BorderSide(color: borderColor),
-        ),
-        child: Text(text, style: TextStyle(color: textColor, fontSize: 15),),
+      child: OutlinedButton(
         onPressed: () {
-          if (pageRoute==1){
-            Route route = MaterialPageRoute(builder: (bc) => const Login());
-            Navigator.of(context).push(route);
-          } else {
-            ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(
-                content: Text("Continuar Scroll"),
-              ),
-            );
-          }
 
+          if (page < (boardingData.length - 1)) {
+            page += 1;
+            print(boardingData.length);
+            print(page);
+            setState(() {
+              ContainerBoarding(
+                image: boardingData[page]['image']!,
+                title: boardingData[page]['title']!,
+                text: boardingData[page]['Text']!,
+              );
+            });
+            _pageController.animateToPage(page, duration: const Duration(milliseconds: 450), curve: Curves.decelerate);
+          }
+          else {
+            Navigator.pushNamed(context, '/login');
+          }
         },
+        child: Text(
+            page == (boardingData.length - 1)
+                ? 'Continuar'
+                : 'Siguiente',
+            style: page == (boardingData.length - 1)
+                ? TextStyle(color: Colors.white)
+                : TextStyle(color: ColorsViews.textSubtitle)),
+        style: ButtonStyle(
+          backgroundColor: MaterialStateProperty.resolveWith<Color>((states) {
+            if (page == (boardingData.length - 1)) {
+              return ColorsViews.bottomGreen;
+            }
+            return Colors.transparent;
+          }),
+          overlayColor: MaterialStateProperty.resolveWith<Color>(
+                (states) {
+              if (states.contains(MaterialState.pressed)) {
+                return Colors.grey;
+              }
+              return Colors.transparent;
+            },
+          ),
+          shape: MaterialStateProperty.resolveWith<OutlinedBorder>(
+                (_) {
+              return RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(16));
+            },
+          ),
+        ),
       ),
     );
   }
-}
 
 AnimatedContainer _animatedContainer({required int index}){
   return AnimatedContainer(
@@ -154,7 +170,7 @@ AnimatedContainer _animatedContainer({required int index}){
   );
 
 }
-
+}
 class ContainerBoarding extends StatelessWidget {
   final String image;
   final String title;
@@ -169,43 +185,43 @@ class ContainerBoarding extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-        padding: const EdgeInsets.only(top: 30),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            SizedBox(
-              width: 250,
-              height: 250,
-              child: Image.asset(image),
-            ),
-            Padding(
-                padding: const EdgeInsets.only(left: 25, right: 25, top: 10),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                  Text(
-                    title,
-                    style: const TextStyle(
-                        color: ColorsViews.textHeader,
-                        fontSize: 30,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ],
-                ),
-            ),
-            Padding(
-                padding: const EdgeInsets.only(top: 15, right: 50, left: 50),
-                child: Text(
-                  text,
+      padding: const EdgeInsets.only(top: 30),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          SizedBox(
+            width: 250,
+            height: 250,
+            child: Image.asset(image),
+          ),
+          Padding(
+            padding: const EdgeInsets.only(left: 25, right: 25, top: 10),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
+                  title,
                   style: const TextStyle(
-                      color: ColorsViews.colorBarraContinua,
-                      fontSize: 15,
+                    color: ColorsViews.textHeader,
+                    fontSize: 30,
+                    fontWeight: FontWeight.bold,
                   ),
+                ),
+              ],
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.only(top: 15, right: 50, left: 50),
+            child: Text(
+              text,
+              style: const TextStyle(
+                color: ColorsViews.colorBarraContinua,
+                fontSize: 15,
               ),
             ),
-          ],
-        ),
+          ),
+        ],
+      ),
     );
 
   }
